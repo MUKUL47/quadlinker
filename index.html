@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+  <style>
+    body {
+      height: 100vw;
+      background: #000;
+    }
+
+    canvas {
+      background-color: #fff;
+    }
+
+    .chart_options button {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .chart_option .active_action {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="chart">
+    <div class="chart_options" id="chart_options">
+      <button data-action="square">Square</button>
+    </div>
+    <canvas id="ctx" width="1200" height="800"></canvas>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
