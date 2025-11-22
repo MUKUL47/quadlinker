@@ -1,9 +1,13 @@
-import { EventArgsMap, EventDataListener, Events } from "../event-listener";
-import { Link } from "../shapes/link";
-import { Shape } from "../shapes/shape";
-import { Vector2 } from "../shapes/vector2";
-import { Entity, _null } from "../type";
-import { calculateDistance, vecToRgb } from "../utils";
+import {
+  EventArgsMap,
+  EventDataListener,
+  Events,
+} from "../core/event-listener";
+import { Shape } from "../shapes/base/shape";
+import { Vector2 } from "../shapes/base/vector2";
+import { Link } from "../shapes/links/link";
+import { Entity, _null } from "../core/types/type";
+import { calculateDistance, vecToRgb } from "../core/utils/utils";
 import { PriorityLinker } from "./priority-linker";
 /**
  * Source and Target
@@ -39,7 +43,7 @@ export class LinkQuad implements Entity {
     this.ctx = ctx;
     this.eventListener = eventDataListener;
   }
-  update({ }) {
+  update({}) {
     // this.renderLinks();
   }
   destroy() {
@@ -65,7 +69,7 @@ export class LinkQuad implements Entity {
       if (this._links.has(s)) {
         this.renderLinks(this._links.get(s));
       }
-    })
+    });
   }
   renderLinks(quad: Link) {
     quad.normalizeAbsPoints();
@@ -165,7 +169,7 @@ export class LinkQuad implements Entity {
       if (this.activelink!.sourceId == this.activelink!.destinationId) {
         return this.removeLink(this.activelink!.id!);
       }
-    } catch (e) { }
+    } catch (e) {}
   };
 
   private quadSelect = (args: EventArgsMap["SELECT_QUAD"]) => {
@@ -181,14 +185,14 @@ export class LinkQuad implements Entity {
     if (isAbsPivot) {
       // this.activelink.addNewPoint(linkPoint, idx);
       l.updateActiveVertexPointIndex(idx, linkPoint);
-      acknowledge?.(l, () => { });
+      acknowledge?.(l, () => {});
       return;
     }
     l.newPointVertex = null;
     l.resetSourceDestinationId(idx);
     l.setCurrentPosition(vec2);
     l.updateActiveVertexPointIndex(idx);
-    acknowledge?.(l, () => { });
+    acknowledge?.(l, () => {});
   };
 
   private removeLink(id: number) {
@@ -202,7 +206,7 @@ export class LinkQuad implements Entity {
     l.setCurrentPosition(v);
     this.activelink = l;
     this._links.set(l.id!, l);
-    this.eventListener.invoke('PUSH_TO_LAYER', [l.id, l.layerId]);
+    this.eventListener.invoke("PUSH_TO_LAYER", [l.id, l.layerId]);
     cb?.(l, eventId);
   };
   private onHover = (vec2: Vector2) => {

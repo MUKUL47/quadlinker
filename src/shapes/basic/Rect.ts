@@ -1,32 +1,42 @@
-import { Vector2 } from "./vector2";
-import { _null, PivotPoint, TransformPivotData } from "../type";
+import {
+  PivotPoint,
+  TransformPivotData,
+  _null,
+  _undefined,
+} from "../../core/types/type";
+import { Vector2 } from "../base/vector2";
+import { TextShape } from "../text/text-shape";
 import { Pivot } from "./Pivot";
-import { Shape } from "./shape";
-import { TextShape } from "./text-shape";
 
-export class Triangle extends TextShape {
+export class Rect extends TextShape {
   transformPivotMap = new Map<PivotPoint, TransformPivotData>();
   constructor(x: number, y: number, width: number) {
     super(x, y, [
       new Vector2(x, y),
-      new Vector2(x - width, y + width),
-      new Vector2(x + width, y + width),
+      new Vector2(x + width * 2, y),
+      new Vector2(x + width * 2, y + width),
+      new Vector2(x, y + width),
     ]);
-    const [top, bl, br] = this.vertices;
-    this.transformPivotMap = new Map([
+    this.transformPivotMap = Rect.getTransformPivot(this.vertices);
+  }
+
+  static getTransformPivot(
+    vertices: Vector2[]
+  ): Map<PivotPoint, TransformPivotData> {
+    const [tl, tr, br, bl] = vertices;
+    return new Map([
       [
         "br",
         {
-          x: [br],
+          x: [br, tr],
           y: [bl, br],
-          customX: { vec2: [top], transform: (v) => v / 2 },
           exceptions: [
             {
-              if: ({ x }) => x > 0 && bl.x >= br.x,
+              if: ({ x }) => bl.x >= br.x && x > 0,
               return: Pivot.BottomLeft(),
             },
             {
-              if: ({ y }) => y > 0 && top.y >= bl.y,
+              if: ({ y }) => tl.y >= br.y && y > 0,
               return: Pivot.TopRight(),
             },
           ],
@@ -35,16 +45,15 @@ export class Triangle extends TextShape {
       [
         "bl",
         {
-          x: [bl],
+          x: [tl, bl],
           y: [bl, br],
-          customX: { vec2: [top], transform: (v) => v / 2 },
           exceptions: [
             {
-              if: ({ x }) => x < 0 && bl.x >= br.x,
+              if: ({ x }) => bl.x >= br.x && x < 0,
               return: Pivot.BottomRight(),
             },
             {
-              if: ({ y }) => y > 0 && top.y >= bl.y,
+              if: ({ y }) => tl.y >= br.y && y > 0,
               return: Pivot.TopLeft(),
             },
           ],
@@ -53,16 +62,15 @@ export class Triangle extends TextShape {
       [
         "tl",
         {
-          x: [bl],
-          y: [top],
-          customX: { vec2: [top], transform: (v) => v / 2 },
+          x: [tl, bl],
+          y: [tl, tr],
           exceptions: [
             {
-              if: ({ x }) => x < 0 && bl.x >= br.x,
+              if: ({ x }) => bl.x >= br.x && x < 0,
               return: Pivot.TopRight(),
             },
             {
-              if: ({ y }) => y < 0 && top.y >= bl.y,
+              if: ({ y }) => tl.y >= br.y && y < 0,
               return: Pivot.BottomLeft(),
             },
           ],
@@ -71,16 +79,15 @@ export class Triangle extends TextShape {
       [
         "tr",
         {
-          x: [br],
-          y: [top],
-          customX: { vec2: [top], transform: (v) => v / 2 },
+          x: [tr, br],
+          y: [tl, tr],
           exceptions: [
             {
-              if: ({ x }) => x > 0 && bl.x >= br.x,
+              if: ({ x }) => bl.x >= br.x && x > 0,
               return: Pivot.TopLeft(),
             },
             {
-              if: ({ y }) => y < 0 && top.y >= bl.y,
+              if: ({ y }) => tl.y >= br.y && y < 0,
               return: Pivot.BottomRight(),
             },
           ],

@@ -1,4 +1,4 @@
-import { PivotPoint, TransformPivotData } from "../type";
+import { PivotPoint, TransformPivotData } from "../../core/types/type";
 import { Circle } from "./circle";
 export class Pentagon extends Circle {
   transformPivotMap = new Map<PivotPoint, TransformPivotData>();

@@ -5,9 +5,9 @@ import {
   TransformPivotData,
   _null,
   highlightVerticesType,
-} from "../type";
-import { Pivot } from "./Pivot";
-import { Polygon } from "./polygon";
+} from "../../core/types/type";
+import { Pivot } from "../basic/Pivot";
+import { Polygon } from "../basic/polygon";
 import { Vector2 } from "./vector2";
 export abstract class Shape extends Polygon {
   static readonly ResizeMouseStyle: Record<PivotPoint, CursorStyle> = {
@@ -77,7 +77,12 @@ export abstract class Shape extends Polygon {
   }
 
   getAbsBox(vec2?: Vector2[]): [number, number, number, number] {
-    let rsp: [number, number, number, number] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER];
+    let rsp: [number, number, number, number] = [
+      Number.MAX_SAFE_INTEGER,
+      Number.MAX_SAFE_INTEGER,
+      Number.MIN_SAFE_INTEGER,
+      Number.MIN_SAFE_INTEGER,
+    ];
     (vec2 ?? this.vertices).forEach((v) => {
       rsp = [
         Math.min(rsp[0], v.x),
@@ -92,13 +97,18 @@ export abstract class Shape extends Polygon {
   boundingBox(
     ctx: CanvasRenderingContext2D,
     absCoords: [number, number, number, number],
-    options?: Partial<{ disableArc: boolean, strokeStyle: string, lineWidth: number, fillStyle }>
+    options?: Partial<{
+      disableArc: boolean;
+      strokeStyle: string;
+      lineWidth: number;
+      fillStyle;
+    }>
   ) {
     let [minX, minY, maxX, maxY] = absCoords;
     ctx.beginPath();
     ctx.strokeStyle = options?.strokeStyle ?? "#000";
-    ctx.lineWidth = options?.lineWidth ?? .5;
-    ctx.setLineDash([1])
+    ctx.lineWidth = options?.lineWidth ?? 0.5;
+    ctx.setLineDash([1]);
     const boundCoords = [
       new Vector2(minX, minY),
       new Vector2(minX, maxY),
@@ -112,7 +122,7 @@ export abstract class Shape extends Polygon {
     ctx.stroke();
 
     ctx.fillStyle = options?.fillStyle ?? "cyan";
-    if (options?.disableArc) return
+    if (options?.disableArc) return;
     boundCoords.forEach((v) => {
       ctx.beginPath();
       ctx.arc(v.x + 1, v.y + 1, 3, 0, 2 * Math.PI);

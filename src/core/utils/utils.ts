@@ -1,4 +1,4 @@
-import { Vector2 } from "./shapes/vector2";
+import { Vector2 } from "../../shapes/base/vector2";
 
 export function hasRgbMatch(v: number[], b: number[]): boolean {
   if (v.length != b.length) return false;

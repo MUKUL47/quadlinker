@@ -1,15 +1,19 @@
-import { EventArgsMap, EventDataListener, Events } from "../../event-listener";
-import { Pivot } from "../../shapes/Pivot";
-import { Rect } from "../../shapes/Rect";
-import { GenericShape } from "../../shapes/generic-shape";
-import { Shape } from "../../shapes/shape";
-import { ToggleLink } from "../../shapes/toggle-link";
-import { Vector2 } from "../../shapes/vector2";
-import { Entity, ShapeDrawOptions, _null } from "../../type";
+import {
+  EventDataListener,
+  EventArgsMap,
+  Events,
+} from "../../core/event-listener";
+import { GenericShape } from "../../shapes/base/generic-shape";
+import { Shape } from "../../shapes/base/shape";
+import { Vector2 } from "../../shapes/base/vector2";
+import { Pivot } from "../../shapes/basic/Pivot";
+import { Rect } from "../../shapes/basic/Rect";
+import { ToggleLink } from "../../shapes/links/toggle-link";
+import { Entity, ShapeDrawOptions, _null } from "../../core/types/type";
 import { GlobalSelect } from "../global-select";
 
 export abstract class Quadrant implements Entity {
-  protected readonly abstract eventId: string;
+  protected abstract readonly eventId: string;
   static readonly OFFSET = 10;
   static readonly HOVER_OFFSET = 30;
   ctx: CanvasRenderingContext2D;
@@ -27,8 +31,7 @@ export abstract class Quadrant implements Entity {
     this.ctx = ctx;
     this.eventListener = eventDataListener;
   }
-  update({ }) {
-  }
+  update({}) {}
   destroy() {
     this.eventListener.deregister(Events.ON_HOVER, this.onHover);
     this.eventListener.deregister(Events.MULTI_SELECT, this.onMultiSelect);
@@ -67,16 +70,16 @@ export abstract class Quadrant implements Entity {
       if (this._quads.has(s)) {
         this.renderQuads(this._quads.get(s));
       }
-    })
-    this.eventListener.register(Events.KEY_DOWN, this.onKeyDown)
+    });
+    this.eventListener.register(Events.KEY_DOWN, this.onKeyDown);
   }
 
-  protected abstract onKeyDown(args: EventArgsMap['KEY_DOWN']): void;
+  protected abstract onKeyDown(args: EventArgsMap["KEY_DOWN"]): void;
 
-  protected onDbClick = (mouseEvent: EventArgsMap['ON_DBCLICK']) => {
+  protected onDbClick = (mouseEvent: EventArgsMap["ON_DBCLICK"]) => {
     if (!this._hoveringQuad) return;
-    this.doubleClickQuads = new Set([this._hoveringQuad.id])
-  }
+    this.doubleClickQuads = new Set([this._hoveringQuad.id]);
+  };
 
   private getQuadByVec2 = (arg: EventArgsMap["GET_QUAD_BY_VEC2"]) => {
     const [vec2, offset, cb] = arg;
@@ -108,18 +111,18 @@ export abstract class Quadrant implements Entity {
   }
 
   renderQuads(quad: Shape, shapeDrawOptions?: ShapeDrawOptions) {
-    if (
-      this._hoveringQuad?.id! == quad.id ||
-      this.activeQuads.has(quad.id!)
-    ) {
+    if (this._hoveringQuad?.id! == quad.id || this.activeQuads.has(quad.id!)) {
       ToggleLink.draw(quad, this.ctx);
     }
-    quad.draw(this.ctx, shapeDrawOptions ?? {
-      highlightVertices:
-        this._hoveringQuad?.id! == quad.id || this.activeQuads.has(quad.id!),
-      boundingBox: this.activeQuads.has(quad.id!),
-      lineWidth: .2
-    });
+    quad.draw(
+      this.ctx,
+      shapeDrawOptions ?? {
+        highlightVertices:
+          this._hoveringQuad?.id! == quad.id || this.activeQuads.has(quad.id!),
+        boundingBox: this.activeQuads.has(quad.id!),
+        lineWidth: 0.2,
+      }
+    );
   }
 
   private resetTextLink = (e: keyof typeof Events) => {
@@ -130,7 +133,7 @@ export abstract class Quadrant implements Entity {
 
   private newQuad = () => {
     const r = this.fetchShape;
-    this.eventListener.invoke('PUSH_TO_LAYER', [r.id, r.layerId]);
+    this.eventListener.invoke("PUSH_TO_LAYER", [r.id, r.layerId]);
     this.quads.set(r.id!, r);
   };
 
@@ -221,7 +224,7 @@ export abstract class Quadrant implements Entity {
     const [v, acknowledge] = args;
     const l = this.isLink(v);
     if (l) {
-      acknowledge(l, () => { });
+      acknowledge(l, () => {});
       return;
     }
     const r = this.selectQuad(v, true, Quadrant.OFFSET) as Shape;
@@ -240,7 +243,7 @@ export abstract class Quadrant implements Entity {
         q.setCurrentPosition(v);
       }
       if (hasPivot) {
-        acknowledge?.(quadUnderBounds, () => { });
+        acknowledge?.(quadUnderBounds, () => {});
         return;
       } else if (this._hoveringQuad) {
         const hoverPivot = this._hoveringQuad.isPivotClick(v);
@@ -249,7 +252,7 @@ export abstract class Quadrant implements Entity {
           this.activeQuads = new Set([hoverQuad.id!]);
           this.activePivotQuads = new Map([[hoverQuad.id!, hoverPivot]]);
           hoverQuad.setCurrentPosition(v);
-          acknowledge?.(hoverQuad, () => { });
+          acknowledge?.(hoverQuad, () => {});
           return;
         }
       }
@@ -264,15 +267,15 @@ export abstract class Quadrant implements Entity {
       this.activeQuads.add(r.id!);
     } else {
       for (const c of this.activeQuads) {
-        this.quads.get(c)?.setCurrentPosition(v)
+        this.quads.get(c)?.setCurrentPosition(v);
       }
     }
-    acknowledge?.(r, () => { });
+    acknowledge?.(r, () => {});
   };
   private isLink = (vec2: Vector2): _null<Shape> => {
     if (
-      !!this._hoveringQuad
-      && ToggleLink.areIntersecting(this._hoveringQuad, vec2)
+      !!this._hoveringQuad &&
+      ToggleLink.areIntersecting(this._hoveringQuad, vec2)
     ) {
       this.activeQuads = new Set([this._hoveringQuad.id!]);
       const quad = this.quads.get(this._hoveringQuad.id!);
@@ -285,7 +288,7 @@ export abstract class Quadrant implements Entity {
             linkShape = l;
           }
         },
-        this.eventId
+        this.eventId,
       ]);
       return linkShape;
     }
@@ -310,10 +313,13 @@ export abstract class Quadrant implements Entity {
     return this.doubleClickQuads.has(id);
   }
 
-  protected getKeyDown(args: KeyboardEvent): _null<{ key: string, backspace?: boolean }> {
+  protected getKeyDown(
+    args: KeyboardEvent
+  ): _null<{ key: string; backspace?: boolean }> {
     if ((args.keyCode >= 32 && args.keyCode <= 126) || args.key === "Backspace")
       return {
-        key: args.key, backspace: true
+        key: args.key,
+        backspace: true,
       };
     return null;
   }

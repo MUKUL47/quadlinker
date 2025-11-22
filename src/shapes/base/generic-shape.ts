@@ -1,4 +1,4 @@
-import { PivotPoint, TransformPivotData } from "../type";
+import { PivotPoint, TransformPivotData } from "../../core/types/type";
 import { Shape } from "./shape";
 import { Vector2 } from "./vector2";
 

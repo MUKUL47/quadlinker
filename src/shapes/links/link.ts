@@ -1,10 +1,9 @@
-import { Quadrant } from "../entities/quadrants/quadrant";
-import { EventDataListener } from "../event-listener";
-import { PivotPoint, TransformPivotData, _null } from "../type";
-import { getNearestDistance } from "../utils";
-import { Polygon } from "./polygon";
-import { Shape } from "./shape";
-import { Vector2 } from "./vector2";
+import { EventDataListener } from "../../core/event-listener";
+import { PivotPoint, TransformPivotData, _null } from "../../core/types/type";
+import { getNearestDistance } from "../../core/utils/utils";
+import { Quadrant } from "../../entities/quadrants/quadrant";
+import { Shape } from "../base/shape";
+import { Vector2 } from "../base/vector2";
 
 export class Link extends Shape {
   transformPivotMap: Map<PivotPoint, TransformPivotData>;
@@ -39,7 +38,7 @@ export class Link extends Shape {
   getSourceDestination(): [_null<Shape>, _null<Shape>] {
     return [
       Quadrant.getQuadById(this.eventListener, this.sourceId),
-      Quadrant.getQuadById(this.eventListener, this.destinationId)
+      Quadrant.getQuadById(this.eventListener, this.destinationId),
     ];
   }
 

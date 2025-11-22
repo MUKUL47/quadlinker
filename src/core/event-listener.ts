@@ -1,7 +1,7 @@
-import { Polygon } from "./shapes/polygon";
-import { Shape } from "./shapes/shape";
-import { Vector2 } from "./shapes/vector2";
-import { CursorStyle, _null } from "./type";
+import { Shape } from "../shapes/base/shape";
+import { Vector2 } from "../shapes/base/vector2";
+import { Polygon } from "../shapes/basic/polygon";
+import { CursorStyle, _null } from "../core/types/type";
 
 export const Events = {
   ON_DBCLICK: "ON_DBCLICK",
@@ -29,7 +29,7 @@ export const Events = {
   GET_QUAD_BY_ID: "GET_QUAD_BY_ID",
   SHAPE_ON_HOVER: "SHAPE_ON_HOVER",
   PUSH_TO_LAYER: "PUSH_TO_LAYER",
-  ON_LAYER_RENDER: "ON_LAYER_RENDER"
+  ON_LAYER_RENDER: "ON_LAYER_RENDER",
 } as const;
 export type EventArgsMap = {
   ON_DBCLICK: MouseEvent;
@@ -45,7 +45,12 @@ export type EventArgsMap = {
   NEW_QUAD: true;
   ON_HOVER: Vector2;
   ACTIVE_QUAD: _null<Polygon>;
-  GENERATE_NEW_LINK: [Vector2, Shape, (p: Shape, eventId: string) => void, string];
+  GENERATE_NEW_LINK: [
+    Vector2,
+    Shape,
+    (p: Shape, eventId: string) => void,
+    string
+  ];
   ON_MOUSE_POSITION: Vector2;
   ACTION_BUTTON_RECT: boolean;
   MULTI_SELECT: [Vector2, Vector2];
@@ -62,8 +67,8 @@ export type EventArgsMap = {
   UPDATE_CANVAS_POINTER: CursorStyle;
   GET_QUAD_BY_ID: [number, (q: _null<Shape>) => any];
   SHAPE_ON_HOVER: [Array<_null<Shape>>, Array<Shape>];
-  PUSH_TO_LAYER: [number, number],
-  ON_LAYER_RENDER: number,
+  PUSH_TO_LAYER: [number, number];
+  ON_LAYER_RENDER: number;
   //
 };
 type InvokeType<T extends keyof EventArgsMap> = EventArgsMap[T];
@@ -73,7 +78,9 @@ type EventMiddlewareCb<T extends keyof typeof Events> = (
   e: T,
   t: InvokeType<T>
 ) => boolean;
-export const FinalEvents: (keyof EventArgsMap)[] = Object.keys(Events) as (keyof EventArgsMap)[];
+export const FinalEvents: (keyof EventArgsMap)[] = Object.keys(
+  Events
+) as (keyof EventArgsMap)[];
 export class EventDataListener {
   private events: Map<
     string,
@@ -136,12 +143,18 @@ export class EventDataListener {
           return;
         }
       }
-      (this.interceptors.get(eventName) ?? []).forEach((cb) => cb?.(v))
+      (this.interceptors.get(eventName) ?? []).forEach((cb) => cb?.(v));
       cb?.(v);
     });
   }
 
-  intecept<T extends keyof EventArgsMap>(eventName: T, v: InterceptorCb<T>): void {
-    this.interceptors.set(eventName, [...(this.interceptors.get(eventName) ?? []), v]);
+  intecept<T extends keyof EventArgsMap>(
+    eventName: T,
+    v: InterceptorCb<T>
+  ): void {
+    this.interceptors.set(eventName, [
+      ...(this.interceptors.get(eventName) ?? []),
+      v,
+    ]);
   }
 }

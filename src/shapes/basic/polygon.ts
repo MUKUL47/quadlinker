@@ -1,6 +1,6 @@
-import { _null, _undefined } from "../type";
+import { _null, _undefined } from "../../core/types/type";
+import { Vector2 } from "../base/vector2";
 import { Pivot } from "./Pivot";
-import { Vector2 } from "./vector2";
 
 export class Polygon extends Vector2 {
   vertices: Array<Vector2>;

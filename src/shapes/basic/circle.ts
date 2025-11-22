@@ -1,7 +1,6 @@
-import { PivotPoint, TransformPivotData } from "../type";
-import { Shape } from "./shape";
-import { TextShape } from "./text-shape";
-import { Vector2 } from "./vector2";
+import { PivotPoint, TransformPivotData } from "../../core/types/type";
+import { Vector2 } from "../base/vector2";
+import { TextShape } from "../text/text-shape";
 
 export class Circle extends TextShape {
   transformPivotMap: Map<PivotPoint, TransformPivotData>;

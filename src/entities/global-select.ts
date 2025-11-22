@@ -1,7 +1,6 @@
-import { EventDataListener, Events } from "../event-listener";
-import { Entity, EntityUpdate, _null } from "../type";
-import { Polygon } from "../shapes/polygon";
-import { Vector2 } from "../shapes/vector2";
+import { Entity, EntityUpdate, _null } from "../core/types/type";
+import { Vector2 } from "../shapes/base/vector2";
+import { EventDataListener, Events } from "../core/event-listener";
 
 export class GlobalSelect implements Entity {
   ctx: CanvasRenderingContext2D;

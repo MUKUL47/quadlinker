@@ -1,6 +1,7 @@
-import { Vector2 } from "./vector2";
-import { Shape } from "./shape";
-import { _null, PivotPoint, TransformPivotData } from "../type";
+import { PivotPoint, TransformPivotData } from "../../core/types/type";
+
+import { Shape } from "../base/shape";
+import { Vector2 } from "../base/vector2";
 import { Pivot } from "./Pivot";
 
 export class Trapezium extends Shape {

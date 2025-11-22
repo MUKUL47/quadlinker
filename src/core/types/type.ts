@@ -1,6 +1,6 @@
-import { EventDataListener } from "./event-listener";
-import { Pivot } from "./shapes/Pivot";
-import { Vector2 } from "./shapes/vector2";
+import { Vector2 } from "../../shapes/base/vector2";
+import { Pivot } from "../../shapes/basic/Pivot";
+import { EventDataListener } from "../event-listener";
 
 export type _undefined<T> = T | undefined;
 export type _null<T> = T | null;
@@ -71,7 +71,7 @@ export type ShapeDrawOptions = Partial<{
   strokeStyle: string | CanvasGradient | CanvasPattern;
   highlightVertices: boolean;
   boundingBox: boolean;
-  lineWidth: number
+  lineWidth: number;
 }>;
 export type highlightVerticesType = {
   fillStyle: string;
@@ -81,9 +81,9 @@ export type highlightVerticesType = {
 };
 
 const TextKeyboardEvent = {
-  ENTER: 'ENTER',
-  BACKSPACE: 'BACKSPACE',
-  KEYSTROKE: 'KEYSTROKE'
+  ENTER: "ENTER",
+  BACKSPACE: "BACKSPACE",
+  KEYSTROKE: "KEYSTROKE",
 } as const;
 
-export type TextKeyboardEventType = keyof typeof TextKeyboardEvent
+export type TextKeyboardEventType = keyof typeof TextKeyboardEvent;

@@ -1,11 +1,11 @@
-import { GlobalSelect } from "./entities/global-select";
-import { Layer } from "./entities/layer";
-import { PriorityLinker } from "./entities/priority-linker";
-import { LinkQuad } from "./entities/quad-link";
-import { quadrants } from "./entities/quadrants";
+import { GlobalSelect } from "../entities/global-select";
+import { Layer } from "../entities/layer";
+import { PriorityLinker } from "../entities/priority-linker";
+import { LinkQuad } from "../entities/quad-link";
+import { quadrants } from "../entities/quadrants";
+import { Vector2 } from "../shapes/base/vector2";
 import { EventDataListener, Events, FinalEvents } from "./event-listener";
-import { Vector2 } from "./shapes/vector2";
-import { Entity } from "./type";
+import { Entity } from "../core/types/type";
 
 class QuadLinker {
   private canvas: HTMLCanvasElement;
@@ -32,7 +32,7 @@ class QuadLinker {
       new Layer(this.ctx, this.eventListener),
       new GlobalSelect(this.ctx, this.eventListener),
       new PriorityLinker(this.ctx, this.eventListener),
-      ...quadrants(this.ctx, this.eventListener)
+      ...quadrants(this.ctx, this.eventListener),
     ];
     this.onKeyboard();
     this.listenActions();

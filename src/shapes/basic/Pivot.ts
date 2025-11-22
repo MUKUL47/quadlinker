@@ -1,4 +1,4 @@
-import { PivotPoint } from "../type";
+import { PivotPoint } from "../../core/types/type";
 
 export class Pivot {
   private point: PivotPoint;
